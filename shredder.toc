@@ -1,0 +1,11 @@
+## Interface: 11500
+## Interface-Classic: 11500
+## Title: shredder
+## Version: 1.0
+## Author: Rabble
+## SavedVariables shredderCharacterProgress
+
+shredderstart.lua
+shredderdata.lua
+shredder.lua
+shredder.xml
