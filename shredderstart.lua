@@ -45,5 +45,7 @@ end
 ---------
 function shredder:Announce()
 ---------
-	DEFAULT_CHAT_FRAME:AddMessage(YELLOW_FONT_COLOR_CODE.."SHREDDER |ractivated. ");
+	if(shredder:FactionCheck()) then
+		DEFAULT_CHAT_FRAME:AddMessage(YELLOW_FONT_COLOR_CODE.."SHREDDER |ractivated. ");
+	end
 end

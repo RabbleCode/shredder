@@ -1,8 +1,8 @@
 ---------
 function shredder:HandleSlashCommand(cmd)
 ---------
-	local characterName = string.lower(cmd)
-	if characterName ~= nil and characterName ~= "" then		
+	local characterName = string.lower(cmd)	
+ 	if characterName ~= nil and characterName ~= "" then		
 		--shredder:CheckSpecificCharacter(characterName);	
 		shredder:PrintMessageWithShredderPrefix(ORANGE_FONT_COLOR_CODE.."This feature is not yet implemented.")
 	else
@@ -27,10 +27,42 @@ function shredder:CheckSpecificCharacter(characterName)
 end
 
 ---------
+function shredder:FactionCheck()
+---------
+	local faction = UnitFactionGroup("player")
+	if faction ~= "Horde" then
+		shredder:PrintMessageWithShredderPrefix("is only available for "..RED_FONT_COLOR_CODE.."Horde|r characters.")	
+		return false;		
+	end
+	return true;
+end
+
+---------
+function shredder:LevelCheck()
+	---------
+		local level = UnitLevel("player")
+		if level < shredder.MainQuest["minimumlevel"] then
+			shredder:PrintMessageWithShredderPrefix("The quest "..shredder.MainQuest["name"].." is not available until level "..GREEN_FONT_COLOR_CODE..shredder.MainQuest["minimumlevel"])	
+			return false;		
+		end
+		return true;
+	end
+
+---------
 function shredder:CheckCurrentCharacter()
 ---------
+
+	if shredder:FactionCheck() == false then		
+		return;
+	end
+
 	local playerName = UnitName("player")	
 	shredder:PrintHeader(playerName)
+
+	if shredder:LevelCheck() == false then
+		return;
+	end
+
 	local progress = ShredderCharacterProgress[shredder.CurrentRealm][playerName]	
 	if progress == nil then
 		progress = {}	
@@ -101,7 +133,7 @@ function shredder:PrintChapterProgress(chapter)
 				end
 			end			
 			if hasAllPages then				
-				shredder:PrintMessage(YELLOW_FONT_COLOR_CODE..chapter["name"]..": "..ORANGE_FONT_COLOR_CODE.." Ready for turn in! All pages acquired.");
+				shredder:PrintMessage(YELLOW_FONT_COLOR_CODE..chapter["name"]..": "..ORANGE_FONT_COLOR_CODE.." Ready for completion! All pages acquired.");
 			else
 				shredder:PrintMessage(YELLOW_FONT_COLOR_CODE..chapter["name"]..": "..RED_FONT_COLOR_CODE.." incomplete. Still need:");
 				shredder:PrintMessages(pageMessages)
