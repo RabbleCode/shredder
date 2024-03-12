@@ -130,7 +130,7 @@ function shredder:UpdateChapterProgress()
 
 			-- If chapter incomplete, retrieve progress on individual pages
 			if not hasChapter then
-				hasPage, hasAllPages, pages = shredder:FindCollectedPages(chapter)
+				hasPages, hasAllPages, pages = shredder:FindCollectedPages(chapter)
 			end
 
 			local chapterProgress = {}
@@ -174,6 +174,9 @@ function shredder:UpdateChapterProgress()
 end
 
 function shredder:FindCollectedPages(chapter)
+	local hasPages = false
+	local hasAllPages = true
+	local pages = {}
 	for _, pageID in pairs(chapter.Pages) do			
 		if GetItemCount(pageID) > 0 then
 			hasPages = true;
@@ -182,6 +185,8 @@ function shredder:FindCollectedPages(chapter)
 			hasAllPages = false
 		end
 	end
+
+	return hasPages, hasAllPages, pages
 end
 
 function shredder:PrintCharacterProgress(character, realm)
