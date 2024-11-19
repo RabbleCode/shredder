@@ -3,7 +3,10 @@ shredder = {};
 
 function shredder:OnLoad()
 	SLASH_SHREDDER1 = "/shredder";
-	SlashCmdList["SHREDDER"] = function(msg) shredder:HandleSlashCommand(msg) end
+	SLASH_SHREDDERC1 = "/shredderc";
+	SLASH_SHREDDERC2 = "/sc";
+	SlashCmdList["SHREDDER"] = function(msg) shredder:HandleSlashCommand(msg, false) end
+	SlashCmdList["SHREDDERC"] = function(msg) shredder:HandleSlashCommand(msg, true) end
 
 	shredderFrame:RegisterEvent("PLAYER_LOGIN")
 	shredderFrame:RegisterEvent("PLAYER_ENTERING_WORLD")

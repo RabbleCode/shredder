@@ -1,4 +1,4 @@
-function shredder:HandleSlashCommand(cmd)
+function shredder:HandleSlashCommand(cmd, compactMode)
 	shredder.DebugMode = false	
  	if cmd ~= nil and cmd ~= "" then
 		if (cmd == "debug") then					
@@ -7,14 +7,14 @@ function shredder:HandleSlashCommand(cmd)
 		else	
 			local character, realm = shredder:GetCharacterAndRealm(cmd)
 			if(realm ~= nil) then
-				shredder:CheckSpecificCharacter(character, realm);
+				shredder:CheckSpecificCharacter(character, realm, compactMode);
 			else
-				shredder:CheckSpecificCharacter(character, shredder.CurrentRealm);
+				shredder:CheckSpecificCharacter(character, shredder.CurrentRealm, compactMode);
 			end		
 		end
 	else
 		shredder:UpdatePlayerProgress();
-		shredder:PrintCharacterProgress(shredder.PlayerName, shredder.CurrentRealm)
+		shredder:PrintCharacterProgress(shredder.PlayerName, shredder.CurrentRealm, compactMode)
 	end
 end
 
@@ -45,7 +45,7 @@ function shredder:ConvertToTitleCase(text)
 end
 
 
-function shredder:CheckSpecificCharacter(character, realm)
+function shredder:CheckSpecificCharacter(character, realm, compactMode)
 	local name = character.." - "..realm
 	local progress = nil
 
@@ -54,7 +54,7 @@ function shredder:CheckSpecificCharacter(character, realm)
 	end
 		
 	if progress ~= nil then
-		shredder:PrintCharacterProgress(character, realm)	
+		shredder:PrintCharacterProgress(character, realm, compactMode)	
 	else		
 		shredder:PrintMessageWithShredderPrefix("Entry for "..character..RED_FONT_COLOR_CODE.." not found!")
 	end
@@ -189,7 +189,7 @@ function shredder:FindCollectedPages(chapter)
 	return hasPages, hasAllPages, pages
 end
 
-function shredder:PrintCharacterProgress(character, realm)
+function shredder:PrintCharacterProgress(character, realm, compactMode)
 
 	local realmProgress = ShredderCharacterProgress[realm]
 	local characterProgress 
@@ -218,7 +218,11 @@ function shredder:PrintCharacterProgress(character, realm)
 		shredder:PrintMessageWithShredderPrefix("Quest "..ORANGE_FONT_COLOR_CODE.."ready for turn in|r for "..classColoredName);
 	else
 		shredder:PrintMessageWithShredderPrefix("Quest "..RED_FONT_COLOR_CODE.."incomplete|r for "..classColoredName);
-		shredder:PrintChaptersProgress(characterProgress)
+		if(compactMode) then
+			shredder:PrintCompactChaptersProgress(characterProgress)
+		else
+			shredder:PrintChaptersProgress(characterProgress)
+		end
 	end
 end
 
@@ -251,7 +255,6 @@ function shredder:PrintChaptersProgress(progress)
 	end
 end
 
-
 function shredder:PrintPagesProgress(chapterData, chapterProgress)
 	for _, pageID in pairs(chapterData.Pages) do
 		local _, link = GetItemInfo(pageID)
@@ -262,6 +265,58 @@ function shredder:PrintPagesProgress(chapterData, chapterProgress)
 		end
 	end
 end
+
+function shredder:PrintCompactChaptersProgress(progress)
+
+	for _, chapter in pairs(shredder.QuestData.Chapters) do
+
+		local itemID = chapter.ItemID
+		local name = chapter.Name
+		local hasProgress = progress ~= nil and progress.Chapters ~= nil and progress.Chapters[itemID] ~= nil
+
+		-- if character has recorded progress
+		if(hasProgress) then
+			local chapterProgress = progress.Chapters[itemID]
+			-- if chapter is already completed
+			if(chapterProgress.Completed == true) then
+				shredder:PrintMessage("  "..YELLOW_FONT_COLOR_CODE..name..": "..GREEN_FONT_COLOR_CODE.."completed!")
+			-- else if chapter is ready for turn in
+			elseif(chapterProgress.Ready == true) then
+				shredder:PrintMessage("  "..YELLOW_FONT_COLOR_CODE..name..": "..ORANGE_FONT_COLOR_CODE.."ready for turn in.") 
+			-- else if chapter is incomplete
+			else
+				local pagesProgress = shredder:GetCompactPagesProgress(chapter, chapterProgress)
+				shredder:PrintMessage("  "..YELLOW_FONT_COLOR_CODE..name..': '..pagesProgress)
+			end
+		else
+			-- no recorded progress
+				local pagesProgress = shredder:GetCompactPagesProgress(chapter, nil)
+				ghost:PrintMessage("  "..YELLOW_FONT_COLOR_CODE..name..': '..pagesProgress)
+		end
+	end
+end
+
+function shredder:GetCompactPagesProgress(chapterData, chapterProgress)
+
+	local progress = ''
+	local count = 0
+	
+	for _, pageID in pairs(chapterData.Pages) do
+		count = count + 1
+		local name, link = GetItemInfo(pageID)
+		local pageNumber = string.match(name,'%d[%d]?')
+		if(count > 1) then
+			progress = progress..', '
+		end
+		if(chapterProgress and chapterProgress.Pages and chapterProgress.Pages[pageID] == true) then
+			progress = progress..GREEN_FONT_COLOR_CODE..pageNumber..'|r'
+		else
+			progress = progress..RED_FONT_COLOR_CODE..pageNumber..'|r'
+		end
+	end
+	return progress
+end
+
 
 
 function shredder:PrintMessageWithShredderPrefix(message)
