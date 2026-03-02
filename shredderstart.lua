@@ -5,8 +5,11 @@ function shredder:OnLoad()
 	SLASH_SHREDDER1 = "/shredder";
 	SLASH_SHREDDERC1 = "/shredderc";
 	SLASH_SHREDDERC2 = "/sc";
-	SlashCmdList["SHREDDER"] = function(msg) shredder:HandleSlashCommand(msg, false) end
+	SLASH_SHREDDERV1 = "/shredderv"
+	SLASH_SHREDDERV2 = "/sv"
+	SlashCmdList["SHREDDER"] = function(msg) shredder:HandleSlashCommand(msg, true) end
 	SlashCmdList["SHREDDERC"] = function(msg) shredder:HandleSlashCommand(msg, true) end
+	SlashCmdList["SHREDDERV"] = function(msg) shredder:HandleSlashCommand(msg, false) end
 
 	shredderFrame:RegisterEvent("PLAYER_LOGIN")
 	shredderFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
