@@ -1,7 +1,7 @@
 ## Interface: 11508
 ## Interface-Classic: 11508
 ## Title: shredder by |cFFFFF468Rabble|r
-## Version: 1.2.4
+## Version: 1.4
 ## Author: Rabble
 ## SavedVariables: ShredderCharacterProgress
 
