@@ -1,7 +1,7 @@
 ## Interface: 11509, 16001
 
 ## Title: shredder by |cFFFFF468Rabble|r
-## Version: 12.0
+## Version: 2.0
 ## Author: Rabble
 ## SavedVariables: ShredderCharacterProgress
 
