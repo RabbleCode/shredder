@@ -63,11 +63,11 @@ end
 function shredder:PrimeItemCache()
 	if(shredder.QuestData ~= nil) then
 		for index, chapter in pairs(shredder.QuestData.Chapters) do			
-			local _, link = GetItemInfo(chapter.ItemID)	
+			local _, link = shredder:GetItemInfo(chapter.ItemID)	
 
 			-- Get chapter pages
 			for index, page in pairs(chapter.Pages) do				
-				local _, link = GetItemInfo(page)		
+				local _, link = shredder:GetItemInfo(page)		
 			end	
 		end
 	end
