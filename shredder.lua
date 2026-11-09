@@ -101,10 +101,10 @@ function shredder:UpdatePlayerProgress()
 		local questID = shredder.QuestData.QuestID
 
 		-- Quest is already completed and turned in
-		if C_QuestLog.IsQuestFlaggedCompleted(questID) then
+		if shredder:IsQuestCompleted(questID) then
 			shredder.PlayerProgress.Completed = true
 		-- Quest is complete and ready to be turned in
-		elseif IsQuestComplete(questID) then
+		elseif shredder:IsQuestReadyForTurnIn(questID) then
 			shredder.PlayerProgress.Ready = true
 		-- Quest is not yet complete, check each individual chapter
 		else
@@ -123,7 +123,7 @@ function shredder:UpdateChapterProgress()
 		chapters = 0
 		for _, chapter in pairs(shredder.QuestData.Chapters) do
 
-			local hasChapter = GetItemCount(chapter.ItemID) > 0
+			local hasChapter = shredder:GetItemCount(chapter.ItemID) > 0
 			local hasPages = false
 			local hasAllPages = true
 			local pages = {}
@@ -178,7 +178,7 @@ function shredder:FindCollectedPages(chapter)
 	local hasAllPages = true
 	local pages = {}
 	for _, pageID in pairs(chapter.Pages) do			
-		if GetItemCount(pageID) > 0 then
+		if shredder:GetItemCount(pageID) > 0 then
 			hasPages = true;
 			pages[pageID] = true					
 		else
