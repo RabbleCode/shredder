@@ -1,5 +1,3 @@
-ghost = {};
-
 function shredder:GetQuestTitle(questID)
     if(C_QuestLog.GetQuestInfo ~= nil) then -- Classic Era
         return C_QuestLog.GetQuestInfo(questID)
