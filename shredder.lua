@@ -230,7 +230,7 @@ function shredder:PrintChaptersProgress(progress)
 	for _, chapter in pairs(shredder.QuestData.Chapters) do
 
 		local itemID = chapter.ItemID
-		local name, link = GetItemInfo(itemID)
+		local name, link = shredder:GetItemInfo(itemID)
 		local hasProgress = progress ~= nil and progress.Chapters ~= nil and progress.Chapters[itemID] ~= nil
 
 		-- if character has recorded progress
@@ -257,7 +257,7 @@ end
 
 function shredder:PrintPagesProgress(chapterData, chapterProgress)
 	for _, pageID in pairs(chapterData.Pages) do
-		local _, link = GetItemInfo(pageID)
+		local _, link = shredder:GetItemInfo(pageID)
 		if(chapterProgress and chapterProgress.Pages and chapterProgress.Pages[pageID] == true) then
 			shredder:PrintMessage("    "..link..": "..GREEN_FONT_COLOR_CODE.."collected")
 		else
@@ -303,7 +303,7 @@ function shredder:GetCompactPagesProgress(chapterData, chapterProgress)
 	
 	for _, pageID in pairs(chapterData.Pages) do
 		count = count + 1
-		local name, link = GetItemInfo(pageID)
+		local name, link = shredder:GetItemInfo(pageID)
 		local pageNumber = string.match(name,'%d[%d]?')
 		if(count > 1) then
 			progress = progress..', '
