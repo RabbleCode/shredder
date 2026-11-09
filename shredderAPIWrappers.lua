@@ -28,7 +28,6 @@ function shredder:IsQuestReadyForTurnIn(questID)
 end
 
 function shredder:IsQuestActive(questID)
-
     if(GetQuestLogIndexByID ~= nil) then -- Classic Era
         return GetQuestLogIndexByID(questID) or 0 > 0
     elseif(C_QuestLog.GetLogIndexForQuestID ~= nil) then -- Forever
