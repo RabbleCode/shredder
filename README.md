@@ -1,6 +1,6 @@
 # shredder
 
-shredder (short for Shredder Operating Manual) is a simple addon for World of Warcraft: Classic that tracks progress on the Horde quest chain The Lost Pages (Shredder Operating Manual).
+shredder (short for Shredder Operating Manual) is a simple addon for World of Warcraft: Classic and World of Warcraft: Forever that tracks progress on the Horde quest chain The Lost Pages (Shredder Operating Manual).
 
 Usage:
 
