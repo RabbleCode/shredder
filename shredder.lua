@@ -37,7 +37,11 @@ function shredder:GetClassColor(class)
 end
 
 function shredder:GetClassColoredName(class, character, realm)
-	return shredder:GetClassColor(class)..character.."|r"..YELLOW_FONT_COLOR_CODE.." - "..realm
+	if(shredder.HideRealmName) then
+		return shredder:GetClassColor(class)..character.."|r"
+	else		
+		return shredder:GetClassColor(class)..character.."|r"..YELLOW_FONT_COLOR_CODE.." - "..realm
+	end
 end
 
 function shredder:ConvertToTitleCase(text)

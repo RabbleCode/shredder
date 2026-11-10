@@ -39,7 +39,11 @@ end
 function shredder:LoadPlayerData()
 
 	shredder.CurrentRealm = GetRealmName();
-	shredder.PlayerName = UnitName("player");
+	shredder.PlayerName, shredder.PlayerLastName = UnitName("player");
+	if(shredder.PlayerLastName ~= nil) then -- Accounting for Forever's dual names and "realmlessness"
+		shredder.HideRealmName = true
+		shredder.PlayerName = shredder.PlayerName..' '..shredder.PlayerLastName
+	end
 	shredder.PlayerClass = UnitClass("player");
 	shredder.PlayerFaction = UnitFactionGroup("player");
 	shredder.PlayerLevel = UnitLevel("player");
