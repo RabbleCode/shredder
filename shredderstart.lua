@@ -1,6 +1,5 @@
 shredder = {};
 
-
 function shredder:OnLoad()
 	SLASH_SHREDDER1 = "/shredder";
 	SLASH_SHREDDERC1 = "/shredderc";
@@ -23,6 +22,7 @@ function shredder:OnEvent(self, event, ...)
 		shredderFrame:UnregisterEvent("ADDON_LOADED");
 	elseif event == "PLAYER_LOGIN" then
 		shredderFrame:UnregisterEvent("PLAYER_LOGIN");
+		shredder:LoadGameVersionData();
 		shredder:LoadQuestData();
 		shredder:LoadPlayerData();
 		shredder:LoadAccountData();
@@ -35,12 +35,17 @@ function shredder:OnEvent(self, event, ...)
 	end
 end
 
+function shredder:LoadGameVersionData()
+
+	shredder.IsForever = WOW_PROJECT_ID == WOW_PROJECT_CAMELOT
+	shredder.IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+end
 
 function shredder:LoadPlayerData()
 
 	shredder.CurrentRealm = GetRealmName();
 	shredder.PlayerName, shredder.PlayerLastName = UnitName("player");
-	if(shredder.PlayerLastName ~= nil) then -- Accounting for Forever's dual names and "realmlessness"
+	if(shredder.IsForever) then -- Accounting for Forever's dual names and "realmlessness"
 		shredder.HideRealmName = true
 		shredder.PlayerName = shredder.PlayerName..' '..shredder.PlayerLastName
 	end
