@@ -26,6 +26,9 @@ function shredder:OnEvent(self, event, ...)
 		shredder:LoadQuestData();
 		shredder:LoadPlayerData();
 		shredder:LoadAccountData();
+		if(shredder.IsForever) then
+			shredder:CleanUpRealmDataAfterAPIChange();
+		end
 		shredder:PrimeItemCache();
 		shredder:Announce();		
 		shredder:UpdatePlayerProgress();
@@ -48,6 +51,7 @@ function shredder:LoadPlayerData()
 	if(shredder.IsForever) then -- Accounting for Forever's dual names and "realmlessness"
 		shredder.HideRealmName = true
 		shredder.PlayerName = shredder.PlayerName..' '..shredder.PlayerLastName
+		shredder.CurrentRealm = 'Forever' -- API changes no longer return realm name on Forever, and names are unique across regions anyway
 	end
 	shredder.PlayerClass = UnitClass("player");
 	shredder.PlayerFaction = UnitFactionGroup("player");
@@ -67,6 +71,30 @@ function shredder:LoadAccountData()
 	end
 end
 
+function shredder:CleanUpRealmDataAfterAPIChange()
+
+	-- API Change with 1.60.1 Forever patch changed GetRealmName() to return empty string
+	-- causing the addon to store character data in a different, empty key instead of by realm name
+	-- The addon is now fixed to store character data for Forever in key "Forever", but we need to
+	-- clean up the old data that was stored in "CAMWOW..." realm keys and then in the empty realm key
+
+	-- Import then delete any data stored in that interim empty key first, as that's more recent then "CAMWOW" realm data
+	if(ShredderCharacterProgress[""] ~= nil) then
+		ShredderCharacterProgress[shredder.CurrentRealm] = ShredderCharacterProgress[""]
+		ShredderCharacterProgress[""] = nil
+	end
+
+	-- Then import "CAMWOW" data if needed and delete "CAMWOW" data
+	for realm, data in pairs(ShredderCharacterProgress) do
+		if(string.find(realm,"CAMWOW",1, true) and realm ~= nil) then
+			if(ShredderCharacterProgress[shredder.CurrentRealm] == nil) then
+				ShredderCharacterProgress[shredder.CurrentRealm] = ShredderCharacterProgress[realm]
+			end
+			ShredderCharacterProgress[realm] = nil
+		end
+	end
+
+end
 
 -- Calls GetItemInfo on all related quest items to prime the local cache
 function shredder:PrimeItemCache()
